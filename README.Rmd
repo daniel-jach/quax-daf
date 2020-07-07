@@ -1,0 +1,29 @@
+---
+title: "QuAX-DaF"
+output: github_document
+bibliography: documentation/quax-daf.bib
+---
+
+## Description
+
+* QuAX-DaF stands for **Qu**antitative **A**nalyse von Te**X**ten für **D**eutsch **a**ls **F**remdsprache ("Quantitative Analysis of Texts for German as a Foreign Language").
+* QuAX-DaF is an interactive web application that analyzes words in texts, compares their frequency distribution to German language use, and generates teaching material for exercises at specific proficiency levels. 
+* QuAX-DaF will be of use to teachers of German as a foreign language and developers of teaching material.
+
+A detailed documentation in German including linguistic background and suggestions for exercises is available [here](https://daniel-jach.github.io/quax-daf/documentation/quax-daf-documentation.pdf).
+
+QuAX-DaF is available for use [here](https://danieljach.shinyapps.io/quax-daf/). 
+
+The application is written in *R* [@RCT.2013] and uses *shiny* [@Chang.2020] and *TreeTagger* [@Schmid.1994].
+
+## Author  
+
+Daniel Jach <danieljach\@protonmail.com>
+
+## License and Copyright  
+
+&copy; Daniel Jach, University of Zhengzhou, China
+
+Licensed under the [MIT License](LICENSE).
+
+## References  
