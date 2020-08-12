@@ -2,9 +2,9 @@
 
 # Set these paths appropriately
 
-BIN="/srv/connect/apps/quax-daf/TreeTagger/bin"
-CMD="/srv/connect/apps/quax-daf/TreeTagger/cmd"
-LIB="/srv/connect/apps/quax-daf/TreeTagger/lib"
+BIN="/home/user/quax-daf/TreeTagger/bin"
+CMD="/home/user/quax-daf/TreeTagger/cmd"
+LIB="/home/user/quax-daf/TreeTagger/lib"
 
 OPTIONS="-token -lemma -sgml -pt-with-lemma"
 

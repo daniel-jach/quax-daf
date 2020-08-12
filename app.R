@@ -1,5 +1,5 @@
 # the app won't run locally because I had to change the pathes in tree-tagger-german before uploading to shinyapps.io
-# to run the app locally, change pathes in tree-tagger-german to /home/user/quax-daf/
+# to run the app locally, change pathes in tree-tagger-german to /home/user/quax-daf/TreeTagger/
 # to run the app on shinyapps.io, change pathes in tree-tagger-german to /srv/connect/apps/quax-daf/
 
 library(shiny)
@@ -101,12 +101,12 @@ ui <- fluidPage(
                downloadButton("Tabelle.csv", "Tabelle herunterladen"),
                br(),
                br(),
-               DTOutput("table") %>% withSpinner(color="#0dc5c1"), 
+               DTOutput("table") %>% withSpinner(color="#0dc5c1") 
         ))
   ) %>% shinyjs::hidden(), 
   helpText("Die Häufigkeiten basieren auf den Korpora der Leipzig Corpora Collection (D. Goldhahn, T. Eckart & U. Quasthoff: Building Large Monolingual Dictionaries at the Leipzig Corpora Collection: From 100 to 200 Languages. In: Proceedings of the 8th International Language Ressources and Evaluation (LREC'12), 2012)). Für die Lemmatisierung habe ich TreeTagger verwendet (Helmut Schmid (1995): Improvements in Part-of-Speech Tagging with an Application to German. Proceedings of the ACL SIGDAT-Workshop. Dublin, Irland), heruntergeladen von https://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/ am 1. März 2020)."),
   helpText("¹ https://www.kinderzeitmaschine.de/", "² https://www.grimmstories.com/", "³ https://www.deutschlandfunknova.de", "⁴ http://www.einladung-zur-literaturwissenschaft.de"),
-  helpText(HTML("Daniel Jach (Zhengzhou, China) - Kontakt: danieljach@pm.me - Webseite: <a href='https://daniel-jach.github.io/' target='_blank'>https://daniel-jach.github.io/</a>"))
+  helpText(HTML("Daniel Jach (Shanghai, China) - Kontakt: danieljach@pm.me - Webseite: <a href='https://daniel-jach.github.io/' target='_blank'>https://daniel-jach.github.io/</a>"))
 )
 
 
@@ -233,7 +233,7 @@ server <- function(input, output, session) {
     shinyjs::show("Material")
   })
   
-  
+
   ### boldfacing cut off words in text
   boldText<-eventReactive(input$goExe, {
     
@@ -243,7 +243,7 @@ server <- function(input, output, session) {
 
     data$LEMMA_FREQ_CLASS_LCC[grep("[[:punct:]]|\n|[[:space:]]|[[:digit:]]", data$TOKEN)]<-(-Inf) # to prevent boldfacing of punctuation, spaces, and digits
     
-    boldText<-ifelse(data$LEMMA_FREQ_CLASS_LCC > input$cutOff | is.na(data$LEMMA_FREQ_CLASS_LCC), paste("<b>", as.character(data$TOKEN), "</b>", sep = ""), as.character(data$TOKEN)) # boldfacing infrequent words cut-off point or unknown
+    boldText<-ifelse(data$LEMMA_FREQ_CLASS_LCC > input$cutOff | is.na(data$LEMMA_FREQ_CLASS_LCC), paste("<span style='color:blue;font-weight:bold;'>", as.character(data$TOKEN), "</span>", sep = ""), as.character(data$TOKEN)) # boldfacing infrequent words cut-off point or unknown
     
     boldText<-paste(boldText, collapse = " ")
     
@@ -256,18 +256,22 @@ server <- function(input, output, session) {
   
   output$boldText<-renderText({return(boldText())})
   
-  ### rogue words exercise
+  
+    ### rogue words exercise
   rogueWordsExe<-eventReactive(input$goExe, {
     df<-unique(inputData())
-    cutWords<-df[df$LEMMA_FREQ_CLASS_LCC > input$cutOff, "TOKEN"]
-    knownWords<-df[df$LEMMA_FREQ_CLASS_LCC <= input$cutOff, "TOKEN"]
-    if(nrow(cutWords)==0){return(NULL)}
-    cutWords<-as.character(sample(cutWords$TOKEN, 10, replace = FALSE))
+    cutWords<-as.vector(df[df$LEMMA_FREQ_CLASS_LCC > input$cutOff,]$TOKEN)
+    knownWords<-as.vector(df[df$LEMMA_FREQ_CLASS_LCC <= input$cutOff,]$TOKEN)
+    if(length(cutWords)==0){return(NULL)}
+    if(length(cutWords)>10){
+      cutWords<-sample(cutWords, 10, replace = FALSE)
+      }
     rogueWords<-sample(pseudowords, 20, replace = FALSE)
-    knownWords<-as.character(sample(knownWords$TOKEN, 10, replace = FALSE))
+    knownWords<-sample(knownWords, 10, replace = TRUE)
     rogueWordsExe<-append(cutWords, append(rogueWords, knownWords))
     rogueWordsExe<-sample(rogueWordsExe) # randomize order
     rogueWordsExe<-data.frame(rogueWordsExe[1:8], rogueWordsExe[9:16], rogueWordsExe[17:24], rogueWordsExe[25:32], rogueWordsExe[33:40])
+    rogueWordsExe<-rogueWordsExe[, colSums(is.na(rogueWordsExe)) != nrow(rogueWordsExe)]    
     colnames(rogueWordsExe)<-NULL
     rogueWordsExe
   })
@@ -287,6 +291,7 @@ server <- function(input, output, session) {
     unique(df)
   })
   
+  # render data table
   output$table<-renderDT(tableData(), 
                          rownames = FALSE,  
                          colnames = c("Wort", "Lemma", "n", "f", "Rang", "Klasse", "GER"), 
