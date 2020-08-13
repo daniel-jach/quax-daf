@@ -2,9 +2,9 @@
 
 # Set these paths appropriately
 
-BIN="/home/daniel/TreeTagger/bin"
-CMD="./"
-LIB="/home/daniel/TreeTagger/lib"
+BIN="/srv/connect/apps/quax-daf/TreeTagger/bin"
+CMD="/srv/connect/apps/quax-daf/TreeTagger/cmd"
+LIB="/srv/connect/apps/quax-daf/TreeTagger/lib"
 
 GERMANTAGGER=${CMD}/tree-tagger-german
 TAGGER=${BIN}/tree-tagger
