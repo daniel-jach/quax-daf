@@ -1,4 +1,4 @@
-# the app won't run locally because I had to change the pathes in tree-tagger-german before uploading to shinyapps.io
+# the app won't run locally because I had to change the paths in tree-tagger-german before uploading to shinyapps.io
 # to run the app locally, change pathes in tree-tagger-german and tagger-chunker-German to /home/user/quax-daf/TreeTagger/
 # to run the app on shinyapps.io, change pathes in tree-tagger-german to /srv/connect/apps/quax-daf/
 
