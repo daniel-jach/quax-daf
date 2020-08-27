@@ -82,7 +82,7 @@ ui <- fluidPage(
                helpText("Detaillierte Beschreibungen von passenden Übungen finden Sie in der Dokumentation von QuAX-DaF."),
                br(),
                h4("Vor dem Lesen: Wortwolke"),
-               helpText(HTML("In der folgenden Wortwolke sind Wörter umso größer abgebildet, je häufiger Sie in Ihrem Text vorkommen. Seltene Wörter, die Ihren Lernende oder QuAX-DaF unbekannt sind, werden nicht abgebildet.")),
+               helpText(HTML("In der folgenden Wortwolke sind Wörter umso größer abgebildet, je häufiger sie in Ihrem Text vorkommen. Seltene Wörter, die Ihren Lernende oder QuAX-DaF unbekannt sind, werden nicht abgebildet.")),
                wordcloud2Output("wordcloud") %>% withSpinner(color="#0dc5c1"),
                br(),
                h4("Beim Lesen: Markierter Text"),

@@ -22,7 +22,7 @@ Daniel Jach <danieljach\@protonmail.com>
 
 ## License and Copyright  
 
-&copy; Daniel Jach, University of Zhengzhou, China
+&copy; Daniel Jach, Shanghai Normal University, China
 
 Licensed under the [MIT License](LICENSE).
 
