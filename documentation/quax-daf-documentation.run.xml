@@ -55,13 +55,14 @@
       <file>blx-compat.def</file>
       <file>biblatex.def</file>
       <file>blx-natbib.def</file>
-      <file>apa.bbx</file>
       <file>standard.bbx</file>
+      <file>apa.bbx</file>
       <file>apa.cbx</file>
       <file>biblatex.cfg</file>
-      <file>ngerman-apa.lbx</file>
-      <file>ngerman.lbx</file>
       <file>german.lbx</file>
+      <file>german-apa.lbx</file>
+      <file>ngerman.lbx</file>
+      <file>ngerman-apa.lbx</file>
     </requires>
   </internal>
   <external package="biblatex" priority="5" active="0">

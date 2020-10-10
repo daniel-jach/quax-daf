@@ -112,7 +112,6 @@ ui <- fluidPage(
 
 
 
-
 # Define server logic ----
 server <- function(input, output, session) {
   
@@ -180,14 +179,15 @@ server <- function(input, output, session) {
   output$plot<-renderPlotly(
     {
       df<-inputData()
+      
+      CEFR<-round(table(df$CEFR)/sum(table(df$CEFR))*100,2)
+      levels(df$CEFR)<-paste(names(CEFR), " (", CEFR, "%)", sep = "")
+      
       df<-df[,-c("TOKEN")]
       df<-df[complete.cases(df)] # remove NAs
       df<-df[-which(df$LEMMA %in% stopwords),] # remove stopwords
       
       labels<-paste("Lemma:", df$LEMMA, "\n", "Häufigkeitsklasse:", df$LEMMA_FREQ_CLASS_LCC, "\n", "Häufigkeitsrang:", df$LEMMA_FREQ_RANK_LCC, "\n", "GER:", df$CEFR)
-      
-      CEFR<-round(table(df$CEFR)/sum(df$LEMMA_FREQ_INPUT)*100,2)
-      levels(df$CEFR)<-paste(names(CEFR), " (", CEFR, "%)", sep = "")
       
       df<-unique(df)
       labels<-unique(labels)
