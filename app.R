@@ -136,7 +136,7 @@ server <- function(input, output, session) {
                         }
                         
                         text<-str_trim(input, side = c("both")) # remove double and opening/trailing whitespaces from input
-                        
+                          
                         return(text)
                       })
   
@@ -153,7 +153,7 @@ server <- function(input, output, session) {
                     Sys.chmod("./TreeTagger/bin/tree-tagger", mode = "777", use_umask = TRUE)
                     Sys.chmod("./TreeTagger/cmd/filter-german-tags", mode = "777", use_umask = TRUE)
                     
-                    cmd<-paste("echo '", input, "' | ./TreeTagger/cmd/tree-tagger-german", sep = "")
+                    cmd<-paste('echo "', input, '" | ./TreeTagger/cmd/tree-tagger-german', sep = "")
                     input<-system(cmd, intern = TRUE)
                     input<-read.table(text = input, sep = "\t", quote = NULL)
                     input<-input[,c(1,3)]
@@ -185,7 +185,10 @@ server <- function(input, output, session) {
       
       df<-df[,-c("TOKEN")]
       df<-df[complete.cases(df)] # remove NAs
-      df<-df[-which(df$LEMMA %in% stopwords),] # remove stopwords
+      stops<-which(df$LEMMA %in% stopwords)
+      if(length(stops) != 0){
+        df<-df[-stops,] # remove stopwords
+      }
       
       labels<-paste("Lemma:", df$LEMMA, "\n", "Häufigkeitsklasse:", df$LEMMA_FREQ_CLASS_LCC, "\n", "Häufigkeitsrang:", df$LEMMA_FREQ_RANK_LCC, "\n", "GER:", df$CEFR)
       
