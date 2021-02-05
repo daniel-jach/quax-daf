@@ -153,7 +153,8 @@ server <- function(input, output, session) {
                     Sys.chmod("./TreeTagger/bin/tree-tagger", mode = "777", use_umask = TRUE)
                     Sys.chmod("./TreeTagger/cmd/filter-german-tags", mode = "777", use_umask = TRUE)
                     
-                    cmd<-paste('echo "', input, '" | ./TreeTagger/cmd/tree-tagger-german', sep = "")
+                  
+                    cmd<-paste("echo '", input, "' | ./TreeTagger/cmd/tree-tagger-german", sep = "")
                     input<-system(cmd, intern = TRUE)
                     input<-read.table(text = input, sep = "\t", quote = NULL)
                     input<-input[,c(1,3)]
