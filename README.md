@@ -30,6 +30,7 @@ The application is written in *R* (R Core Team 2013) and uses *shiny*
         material; may affect parsing results (e.g., for cross headings)
       - Handle apostrophes (unterminated single quotes) in user input
         text
+      - Other minor improvements
 
 ## Author
 

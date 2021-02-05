@@ -21,6 +21,7 @@ The application is written in *R* [@RCT.2013] and uses *shiny* [@Chang.2020] and
 * **2021-02-05** 
   * Retain formatting (line breaks) of user input text in output material; may affect parsing results (e.g., for cross headings)
   * Handle apostrophes (unterminated single quotes) in user input text
+  * Other minor improvements
 
 
 
