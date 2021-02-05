@@ -162,7 +162,7 @@ server <- function(input, output, session) {
                     out<-as.data.frame(matrix(ncol = 3))
                     
                     for(i in 1:length(input)){
-                      cmd<-paste("echo '", input[i], "' | /home/daniel/TreeTagger/cmd/tree-tagger-german", sep = "")
+                      cmd<-paste("echo '", input[i], "' | ./TreeTagger/cmd/tree-tagger-german", sep = "")
                       parse<-system(cmd, intern = TRUE)
                       parse<-read.table(text = parse, sep = "\t", quote = NULL)
                       out<-rbind(out, parse, c("\n", "\n", "\n"))
