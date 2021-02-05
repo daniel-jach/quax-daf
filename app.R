@@ -162,7 +162,7 @@ server <- function(input, output, session) {
                     out<-as.data.frame(matrix(ncol = 3))
                     
                     for(i in 1:length(input)){
-                      cmd<-paste("echo '", input[i], "' | ./TreeTagger/cmd/tree-tagger-german", sep = "")
+                      cmd<-paste("echo '", input[i], "' | /home/daniel/TreeTagger/cmd/tree-tagger-german", sep = "")
                       parse<-system(cmd, intern = TRUE)
                       parse<-read.table(text = parse, sep = "\t", quote = NULL)
                       out<-rbind(out, parse, c("\n", "\n", "\n"))
@@ -230,7 +230,7 @@ server <- function(input, output, session) {
   ### output n of tokens and types
   output$n<-renderText({
     df<-inputData()
-    df<-df[grep("[[:punct:]]|[[:space:]]", df$TOKEN, invert = TRUE),]
+    df<-df[grep("^[[:punct:]]+$|^[[:space:]]+$|(^[[:punct:]]+$|^[[:space:]]+$)", df$TOKEN, invert = TRUE),]
     nTokens<-length(df$TOKEN)
     nTypes<-length(unique(df$TOKEN))
     df<-df[which(is.na(df$LEMMA)),]
@@ -300,7 +300,7 @@ server <- function(input, output, session) {
   tableData<-eventReactive(input$goExe, {
     df<-inputData()
     df<-df[,c("TOKEN", "LEMMA", "LEMMA_FREQ_INPUT", "LEMMA_FREQ_RELATIVE_LCC", "LEMMA_FREQ_RANK_LCC", "LEMMA_FREQ_CLASS_LCC", "CEFR")]
-    df<-df[grep("[[:punct:]]|\n", df$TOKEN, invert = TRUE),] # remove punctuation and linebreaks
+    df<-df[grep("^[[:punct:]]+$|\n", df$TOKEN, invert = TRUE),] # remove punctuation and linebreaks
     df<-as.matrix(df)
     df[is.na(df)]<-"/"
     df<-as.data.table(df)
