@@ -1,4 +1,4 @@
-# the app won't run locally because I had to change the paths in tree-tagger-german before uploading to shinyapps.io
+## the app won't run locally because I had to change the paths in tree-tagger-german before uploading to shinyapps.io
 # to run the app locally, change pathes in tree-tagger-german and tagger-chunker-German to /home/user/quax-daf/TreeTagger/
 # to run the app on shinyapps.io, change pathes in tree-tagger-german to /srv/connect/apps/quax-daf/
 
@@ -14,6 +14,8 @@ library(wordcloud2)
 library(colorspace)
 library(stringr)
 library(pdftools)
+
+
 
 LCC<-readRDS("./data/LCC.Rda") # load corpus
 source('./data/Beispiele.R') # load example texts
@@ -134,9 +136,9 @@ server <- function(input, output, session) {
                           input<-paste(pdf_text(inFile[[1,"datapath"]]), collapse = " ")
                           input<-gsub("-\n", "", input)
                         }
-                        
+
                         text<-str_trim(input, side = c("both")) # remove double and opening/trailing whitespaces from input
-                          
+                        text<-str_replace_all(text, "\'", "\'\'") # double single quotation marks to avoid system command error
                         return(text)
                       })
   
@@ -147,17 +149,26 @@ server <- function(input, output, session) {
                   {
                     input<-text()
                     
+                    input<-unlist(str_split(input, "\n")) # split input at line breaks
+                    input<-input[which(input != "")] # remove empty lines
+                    
                     # permissions for file execution
                     Sys.chmod("./TreeTagger/cmd/tree-tagger-german", mode = "777", use_umask = TRUE)
                     Sys.chmod("./TreeTagger/cmd/utf8-tokenize.perl", mode = "777", use_umask = TRUE)
                     Sys.chmod("./TreeTagger/bin/tree-tagger", mode = "777", use_umask = TRUE)
                     Sys.chmod("./TreeTagger/cmd/filter-german-tags", mode = "777", use_umask = TRUE)
                     
-                  
-                    cmd<-paste("echo '", input, "' | ./TreeTagger/cmd/tree-tagger-german", sep = "")
-                    input<-system(cmd, intern = TRUE)
-                    input<-read.table(text = input, sep = "\t", quote = NULL)
-                    input<-input[,c(1,3)]
+                    # parse each paragraph
+                    out<-as.data.frame(matrix(ncol = 3))
+                    
+                    for(i in 1:length(input)){
+                      cmd<-paste("echo '", input[i], "' | ./TreeTagger/cmd/tree-tagger-german", sep = "")
+                      parse<-system(cmd, intern = TRUE)
+                      parse<-read.table(text = parse, sep = "\t", quote = NULL)
+                      out<-rbind(out, parse, c("\n", "\n", "\n"))
+                    }
+                    
+                   input<-out[-c(1,nrow(out)),c(1,3)] # join parsed paragraphs
                     
                     input<-as.data.table(input) # create dt
                     setnames(input, c("TOKEN", "LEMMA"))
@@ -180,7 +191,7 @@ server <- function(input, output, session) {
   output$plot<-renderPlotly(
     {
       df<-inputData()
-      
+
       CEFR<-round(table(df$CEFR)/sum(table(df$CEFR))*100,2)
       levels(df$CEFR)<-paste(names(CEFR), " (", CEFR, "%)", sep = "")
       
@@ -248,6 +259,7 @@ server <- function(input, output, session) {
     data$LEMMA_FREQ_CLASS_LCC[grep("[[:punct:]]|\n|[[:space:]]|[[:digit:]]", data$TOKEN)]<-(-Inf) # to prevent boldfacing of punctuation, spaces, and digits
     
     boldText<-ifelse(data$LEMMA_FREQ_CLASS_LCC > input$cutOff | is.na(data$LEMMA_FREQ_CLASS_LCC), paste("<span style='color:blue;font-weight:bold;'>", as.character(data$TOKEN), "</span>", sep = ""), as.character(data$TOKEN)) # boldfacing infrequent words cut-off point or unknown
+    boldText<-gsub("\n", "<br>", boldText)
     
     boldText<-paste(boldText, collapse = " ")
     
